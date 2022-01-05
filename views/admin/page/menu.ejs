@@ -1,0 +1,24 @@
+<%
+function setActive(active,page) {
+    if (active == page) {
+        return "active";
+    }
+}
+%>
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="<%- setActive("index",page) %>">
+                    <a href="/"><i class="menu-icon fa fa-laptop"></i>Tổng Quan</a>
+                </li>
+                <li class="<%- setActive("user",page) %>">
+                    <a href="/users"> <i class="menu-icon fa fa-cogs"></i>Quản lý tài khoản</a>                          
+                </li>
+                <li class="<%- setActive("staff",page) %>">
+                    <a href="/posts"> <i class="menu-icon fa fa-cogs"></i>Quản lý bài đăng</a>                          
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside>

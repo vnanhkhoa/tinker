@@ -1,0 +1,212 @@
+<link rel="stylesheet" href="assets/css/lib/datatable/dataTables.bootstrap.min.css">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+<script>
+    $(document).ready(function () {
+        $("button[name='close']").click(function () {
+            $("div.alert").fadeTo(500, 0, function () {
+                $(this).remove();
+            });
+        });
+    });
+</script>
+<% 
+function setDate(s) {
+    var date = new Date(s);
+    var ngay = (date.getDate() <= 9) ? "0"+date.getDate() : date.getDate();
+    return ngay+"/"+(date.getMonth()+1)+"/"+date.getFullYear(); 
+}
+function convert(str) {
+  var date = new Date(str),
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+  return [date.getFullYear(), mnth, day].join("-");
+}
+%>
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 m-0 p-0">
+                <% if (thongBao != undefined) { %>
+                <% if (thongBao.indexOf("Success") != -1) { %>
+                <div class="row alert alert-success ml-1 mr-1">
+                    <%= thongBao %>
+                    <button type="button" name="close" class="close ml-auto">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <% } else { %>
+                <div class="row alert alert-danger">
+                    <%= thongBao %>
+                </div>
+                <% } %>
+                <% } %>
+                <div class="card">
+                    <div class="card-header row m-0">
+                        <strong class="card-title col-6 m-0 p-0" style="margin-top: 9px !important;">LIST USER</strong>
+                        <div class="col-6 text-right m-0 p-0">
+                            <button class="rounded rounded-circle btn btn-success" data-toggle="modal"
+                                data-target="#add"><i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="card-body pl-0 ml-0 mr-0 pr-0">
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>Phone</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% Users.forEach(function(item) { %>
+                                <tr id="<%= item.id %>">
+                                    <td> <img src="<%- item.linkimg %>" width=50 height=50/></td>
+                                    <td><%- item.name %></td>
+                                    <td><%- item.age %></td>
+                                    <td><%- item.phone %></td>
+                                    <td align="center">
+                                        <a value="<%- item._id %>" data-toggle="modal"
+                                            data-target="#exampleModal<%- item.id %>"
+                                            class="btn btn-warning text-light pt-1 pb-1 pr-2 pl-2 mb-1"><i
+                                                class="fa fa-pencil-square"></i></a>
+                                        <a class="btn btn-danger text-light pt-1 pb-1 pr-2 pl-2 mb-1" data-toggle="modal"
+                                            data-target="#Modal<%- item.id %>"><i class="fa fa-trash-o"></i></a>
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="Modal<%- item.id %>" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title d-inline" id="exampleModalLabel">Delete Account
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Delete Account <%- item.name %>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Cancel</button>
+                                                <a href="/users/delete/<%- item.id %>"
+                                                    class="btn btn-danger">Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="exampleModal<%- item.id %>" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title d-inline" id="exampleModalLabel">Update Account</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form class="p-2" method="post" action="/users/edit">
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold">Name</label>
+                                                        <input type="text" class="form-control" name="name"
+                                                            value="<%- item.name %>" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold">Age</label>
+                                                        <input type="number" class="form-control" name="age"
+                                                            value="<%= item.age %>" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold">Phone</label>
+                                                        <input type="text" class="form-control" name="phone"
+                                                            value="<%- item.phone %>" />
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button value="<%= item.id %>" type="submit" name="edit" class="btn btn-success w-25">Save</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- .animated -->
+</div><!-- .content -->
+
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title d-inline-block" id="smallmodalLabel">Add User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="p-2" method="post" action="/users/add">
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Name</label>
+                            <input type="text" class="form-control" name="name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Age</label>
+                            <input type="number" class="form-control" name="age"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Email</label>
+                            <input type="email" class="form-control" name="email"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Phone</label>
+                            <input type="number" class="form-control" name="phone"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success w-25">Add User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
+<script src="assets/js/main.js"></script>
+
+
+<script src="assets/js/lib/data-table/datatables.min.js"></script>
+<script src="assets/js/lib/data-table/dataTables.bootstrap.min.js"></script>
+<script src="assets/js/lib/data-table/dataTables.buttons.min.js"></script>
+<script src="assets/js/lib/data-table/buttons.bootstrap.min.js"></script>
+<script src="assets/js/lib/data-table/jszip.min.js"></script>
+<script src="assets/js/lib/data-table/vfs_fonts.js"></script>
+<script src="assets/js/lib/data-table/buttons.html5.min.js"></script>
+<script src="assets/js/lib/data-table/buttons.print.min.js"></script>
+<script src="assets/js/lib/data-table/buttons.colVis.min.js"></script>
+<script src="assets/js/init/datatables-init.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#bootstrap-data-table-export').DataTable();
+    });
+</script>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><%= title %></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    var url = location.protocol + '//' + location.hostname + ':' + location.port + '/';
+    $(document).ready(function () {
+      $("input[name='path']").val(window.location.href);
+    })
+    function myFunction() {
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(function () {
+          x.className = x.className.replace("show", "");
+        }, 2000);
+        setTimeout(function () {
+          var check = $('body #snackbar')
+          if (check != null) {
+            check.remove();
+          }
+        }, 2100);
+      }
+  </script>
+</head>
+<body>
+  <main>
+		<%-body %>
+	</main> 
+</body>
+</html>
